@@ -1,0 +1,381 @@
+﻿/**
+ * Sharji Press - Core Stylesheet
+ * Resets, CSS Variables, Typography, Layout & Utilities
+ * 100% Local - Zero External Dependencies
+ */
+
+@import url('fonts.css');
+
+/* ==========================================================================
+   1. CSS CUSTOM PROPERTIES (THEME VARIABLES)
+   ========================================================================== */
+:root {
+    --sharji-blue: #0056b3;
+    --sharji-blue-dark: #004494;
+    --sharji-blue-soft: #eff6ff;
+    --sharji-red: #e31e24;
+    --sharji-red-soft: #fff1f2;
+    --sharji-slate: #0f172a;
+    --sharji-text: #1e293b;
+    --sharji-muted: #64748b;
+    --sharji-border: #e2e8f0;
+    --sharji-bg: #f8fafc;
+    --sharji-white: #ffffff;
+    --primary-blue: #0056b3;
+    --accent-red: #e31e24;
+    --dark-bg: #0f172a;
+}
+
+/* ==========================================================================
+   2. CSS RESETS & GLOBAL BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background:
+        radial-gradient(circle at top right, rgba(0, 86, 179, 0.07), transparent 32%),
+        radial-gradient(circle at bottom left, rgba(227, 30, 36, 0.04), transparent 30%),
+        #f8fafc;
+    color: #1e293b;
+    direction: rtl;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    background: none;
+}
+
+input, textarea, select {
+    font-family: inherit;
+}
+
+/* ==========================================================================
+   3. GLOBAL LAYOUT WRAPPERS & TYPOGRAPHY HELPERS
+   ========================================================================== */
+.font-diba,
+.yekan-bold {
+    font-family: 'Diba', 'Vazirmatn', sans-serif !important;
+    font-weight: 700;
+}
+
+.font-vazir {
+    font-family: 'Vazirmatn', sans-serif !important;
+}
+
+.site-main-wrapper {
+    max-width: 1920px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    padding: 0 40px !important;
+    direction: rtl !important;
+    background: #f8fafc;
+}
+
+@media (max-width: 768px) {
+    .site-main-wrapper {
+        padding: 0 16px !important;
+    }
+}
+
+.main-card-container {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    min-height: 500px;
+}
+
+.content-area {
+    padding: 40px 50px;
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        padding: 24px 18px;
+    }
+}
+
+.entry-content {
+    font-family: 'Vazirmatn', sans-serif;
+    font-size: 17px;
+    line-height: 1.9;
+    color: #334155;
+    text-align: justify;
+}
+
+.ltr {
+    direction: ltr !important;
+    display: inline-block;
+}
+
+/* ==========================================================================
+   4. AD CLEANUP UTILITIES
+   ========================================================================== */
+#index-clean-ads {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    background: transparent !important;
+}
+
+#index-clean-ads, 
+#index-clean-ads *, 
+#index-clean-ads .widget, 
+#index-clean-ads aside, 
+#index-clean-ads div, 
+#index-clean-ads section {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    outline: none !important;
+}
+
+#index-clean-ads a {
+    display: block !important;
+    margin: 0 auto 25px auto !important;
+    width: fit-content !important;
+}
+
+#index-clean-ads img {
+    display: block !important;
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    border-radius: 12px !important;
+    float: none !important;
+}
+
+#index-clean-ads .widget-title, 
+#index-clean-ads h2, 
+#index-clean-ads h3 {
+    display: none !important;
+}
+
+/* ==========================================================================
+   5. UTILITY CLASSES (THEME STANDARD)
+   ========================================================================== */
+.hidden { display: none; }
+.lg\:block { display: none; }
+.lg\:hidden { display: block; }
+.lg\:col-start-2 { grid-column-start: 2; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.flex-1 { flex: 1 1 0%; }
+.flex-shrink-0 { flex-shrink: 0; }
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+.h-auto { height: auto; }
+.w-24 { width: 96px; }
+.h-16 { height: 64px; }
+.w-20 { width: 80px; }
+.object-cover { object-fit: cover; }
+.overflow-hidden { overflow: hidden; }
+.rounded { border-radius: 4px; }
+.rounded-t-lg { border-top-left-radius: 8px; border-top-right-radius: 8px; }
+.rounded-b-lg { border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; }
+.rounded-xl { border-radius: 12px; }
+.rounded-full { border-radius: 9999px; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+.text-white { color: #fff; }
+.text-xs { font-size: 12px; }
+.text-sm { font-size: 14px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-2xl { font-size: 24px; }
+.text-\[10px\] { font-size: 10px; }
+.font-bold { font-weight: bold; }
+.leading-tight { line-height: 1.25; }
+.leading-relaxed { line-height: 1.625; }
+.no-underline { text-decoration: none; }
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-4 { margin-bottom: 16px; }
+.mb-6 { margin-between: 24px; }
+.mb-10 { margin-bottom: 40px; }
+.mt-1 { margin-top: 4px; }
+.mt-4 { margin-top: 16px; }
+.ml-1 { margin-left: 4px; }
+.ml-2 { margin-left: 8px; }
+.p-4 { padding: 16px; }
+.px-2 { padding-left: 8px; padding-right: 8px; }
+.px-5 { padding-left: 20px; padding-right: 20px; }
+.px-6 { padding-left: 24px; padding-right: 24px; }
+.py-0\.5 { padding-top: 2px; padding-bottom: 2px; }
+.py-3 { padding-top: 12px; padding-bottom: 12px; }
+.gap-2 { gap: 8px; }
+.bg-white { background-color: #fff; }
+.bg-\[\#0056b3\] { background-color: #0056b3; }
+.bg-\[\#e31e24\] { background-color: #e31e24; }
+.bg-black\/20 { background-color: rgba(0,0,0,0.2); }
+.bg-black\/30 { background-color: rgba(0,0,0,0.3); }
+.text-gray-600 { color: #4b5563; }
+.text-blue-600 { color: #2563eb; }
+.text-yellow-400 { color: #facc15; }
+.bg-blue-50 { background-color: #eff6ff; }
+.border-t { border-top: 1px solid #f3f4f6; }
+.border-b { border-bottom: 1px solid #e5e7eb; }
+.border-x { border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb; }
+.border-l { border-left: 1px solid #e5e7eb; }
+.border-r { border-right: 1px solid #e5e7eb; }
+.border-white\/40 { border-color: rgba(255,255,255,0.4); }
+.drop-shadow-md { filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)); }
+.drop-shadow-sm { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+.shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
+.shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); }
+.shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
+.shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.inline-block { display: inline-block; }
+.inline-flex { display: inline-flex; }
+.transition { transition: all 0.3s; }
+.transition-colors { transition: color 0.3s, background-color 0.3s; }
+.cursor-pointer { cursor: pointer; }
+.hover\:bg-\[\#004494\]:hover { background-color: #0056b3 !important; }
+.hover\:text-gray-200:hover { color: #fff !important; }
+.bg-gradient-to-t { background-image: linear-gradient(to top, var(--tw-gradient-stops)); }
+.from-black\/90 { --tw-gradient-from: rgba(0,0,0,0.9); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
+.via-black\/20 { --tw-gradient-to: rgba(0,0,0,0); --tw-gradient-stops: var(--tw-gradient-from), rgba(0,0,0,0.2), var(--tw-gradient-to); }
+.to-transparent { --tw-gradient-to: transparent; }
+.bottom-0 { bottom: 0; }
+.right-0 { right: 0; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.text-justify { text-align: justify; }
+.min-w-full { min-width: 100%; }
+.h-\[55px\] { height: 55px; }
+.h-\[240px\] { height: 240px; }
+.w-\[180px\] { width: 180px; }
+.h-\[120px\] { height: 120px; }
+.block { display: block; }
+.text-center { text-align: center; }
+.duration-700 { transition-duration: 700ms; }
+.gap-3 { gap: 12px; }
+.gap-5 { gap: 20px; }
+.gap-6 { gap: 24px; }
+.gap-10 { gap: 40px; }
+.gap-15 { gap: 60px; }
+.h-32 { height: 128px; }
+.top-50 { top: 50%; }
+.left-50 { left: 50%; }
+.sticky { position: sticky; top: 32px; }
+.rounded-lg { border-radius: 8px; }
+.rounded-2xl { border-radius: 16px; }
+.border { border: 1px solid #e2e8f0; }
+.border-slate-50 { border-color: #f8fafc; }
+.border-slate-200 { border-color: #e2e8f0; }
+.border-dashed { border-style: dashed; }
+.border-gray-300 { border-color: #d1d5db; }
+.border-red-600 { border-color: #dc2626; }
+.bg-slate-100 { background-color: #f1f5f9; }
+.bg-gray-200 { background-color: #e5e7eb; }
+.text-slate-800 { color: #1e293b; }
+.text-gray-400 { color: #9ca3af; }
+.text-gray-500 { color: #6b7280; }
+.text-blue-500 { color: #3b82f6; }
+.text-red-400 { color: #f87171; }
+.text-red-500 { color: #ef4444; }
+.text-4xl { font-size: 2.25rem; }
+.text-\[13px\] { font-size: 13px; }
+.font-normal { font-weight: 400; }
+.leading-6 { line-height: 1.5rem; }
+.mb-8 { margin-bottom: 32px; }
+.mt-2 { margin-top: 8px; }
+.mr-2 { margin-right: 8px; }
+.p-12 { padding: 48px; }
+.transition-all { transition: all 0.3s; }
+.transition-transform { transition: transform 0.5s; }
+.hover\:bg-slate-50:hover { background-color: #f8fafc; }
+.hover\:text-red-700:hover { color: #b91c1c; }
+.group:hover .group-hover\:scale-105 { transform: scale(1.05); }
+.group:hover .group-hover\:text-red-700 { color: #b91c1c; }
+.gap-8 { gap: 32px; }
+.border-slate-100 { border-color: #f1f5f9; }
+.bg-red-700 { background-color: #b91c1c; }
+.text-slate-500 { color: #64748b; }
+.text-blue-900 { color: #1e3a8a; }
+.text-\[12px\] { font-size: 12px; }
+.text-\[14px\] { font-size: 14px; }
+.leading-5 { line-height: 1.25rem; }
+.pb-4 { padding-bottom: 16px; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.gap-4 { gap: 16px; }
+.text-slate-700 { color: #334155; }
+.text-\[\#0056b3\] { color: #0056b3; }
+.text-3xl { font-size: 30px; }
+.leading-loose { line-height: 2; }
+.mt-6 { margin-top: 24px; }
+.pb-8 { padding-bottom: 32px; }
+.text-slate-600 { color: #4b5563; }
+.mb-3 { margin-bottom: 12px; }
+.ml-5 { margin-left: 20px; }
+.pb-3 { padding-bottom: 12px; }
+.items-start { align-items: flex-start; }
+.py-10 { padding-top: 40px; padding-bottom: 40px; }
+.font-diba { font-family: 'Diba', sans-serif; }
+.text-blue-800 { color: #1e40af; }
+
+/* ==========================================================================
+   6. RESPONSIVE UTILITIES
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .lg\:block { display: none !important; }
+    .lg\:hidden { display: block !important; }
+}
+
+@media (min-width: 1025px) {
+    .lg\:block { display: block !important; }
+    .lg\:hidden { display: none !important; }
+    .lg\:w-\[75\%\] { width: 75%; }
+    .lg\:w-\[25\%\] { width: 25%; }
+    .lg\:flex-row { flex-direction: row; }
+    .lg\:py-12 { padding-top: 48px; padding-bottom: 48px; }
+    .lg\:order-1 { order: 1; }
+    .lg\:order-2 { order: 2; }
+    .lg\:col-start-2 { grid-column-start: 2; }
+    .md\:text-3xl { font-size: 30px; }
+}
