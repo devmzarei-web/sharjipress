@@ -1,0 +1,4 @@
+[30-Oct-2026 18:30:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/jxlhjxgg/public_html/wp-content/themes/sharji-theme/index.php:1
+Stack trace:
+#0 {main}
+  thrown in /home/jxlhjxgg/public_html/wp-content/themes/sharji-theme/index.php on line 1
