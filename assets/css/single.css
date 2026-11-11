@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    SHARJI PRESS - SINGLE ARTICLE STYLES
    ========================================================================== */
 :root {
@@ -29,13 +29,14 @@
     }
 
     .single-main-wrapper {
-        max-width: 1920px !important;
+        max-width: var(--site-max-width, 1380px) !important;
         margin: 0 auto !important;
         width: 100% !important;
         padding: 0 40px !important;
         direction: rtl !important;
         background: transparent;
         font-family: 'Vazirmatn', sans-serif !important;
+        box-sizing: border-box !important;
     }
 
     .single-page-shell {

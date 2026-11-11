@@ -84,29 +84,33 @@ function sharji_enqueue_scripts() {
 add_action( 'wp_enqueue_scripts', 'sharji_enqueue_scripts' );
 
 // Clean deregistration of external CDNs injected by third-party plugins
-add_action( 'wp_default_styles', function( $styles ) {
+add_action( 'wp_enqueue_scripts', function() {
+    global $wp_styles, $wp_scripts;
     if ( ! is_admin() ) {
-        foreach ( $styles->registered as $handle => $style ) {
-            if ( strpos( $style->src, 'cdnjs.cloudflare.com' ) !== false || 
-                 strpos( $style->src, 'cdn.jsdelivr.net' ) !== false ||
-                 strpos( $style->src, 'cdn.tailwindcss.com' ) !== false ) {
-                wp_deregister_style( $handle );
-                wp_dequeue_style( $handle );
+        if ( isset( $wp_styles ) && ! empty( $wp_styles->registered ) ) {
+            foreach ( $wp_styles->registered as $handle => $style ) {
+                if ( ! empty( $style->src ) && is_string( $style->src ) ) {
+                    if ( strpos( $style->src, 'cdnjs.cloudflare.com' ) !== false || 
+                         strpos( $style->src, 'cdn.jsdelivr.net' ) !== false ||
+                         strpos( $style->src, 'cdn.tailwindcss.com' ) !== false ) {
+                        wp_dequeue_style( $handle );
+                        wp_deregister_style( $handle );
+                    }
+                }
+            }
+        }
+        if ( isset( $wp_scripts ) && ! empty( $wp_scripts->registered ) ) {
+            foreach ( $wp_scripts->registered as $handle => $script ) {
+                if ( ! empty( $script->src ) && is_string( $script->src ) ) {
+                    if ( strpos( $script->src, 'cdnjs.cloudflare.com' ) !== false || 
+                         strpos( $script->src, 'cdn.jsdelivr.net' ) !== false ||
+                         strpos( $script->src, 'cdn.tailwindcss.com' ) !== false ) {
+                        wp_dequeue_script( $handle );
+                        wp_deregister_script( $handle );
+                    }
+                }
             }
         }
     }
-}, 100 );
-
-add_action( 'wp_default_scripts', function( $scripts ) {
-    if ( ! is_admin() ) {
-        foreach ( $scripts->registered as $handle => $script ) {
-            if ( strpos( $script->src, 'cdnjs.cloudflare.com' ) !== false || 
-                 strpos( $script->src, 'cdn.jsdelivr.net' ) !== false ||
-                 strpos( $script->src, 'cdn.tailwindcss.com' ) !== false ) {
-                wp_deregister_script( $handle );
-                wp_dequeue_script( $handle );
-            }
-        }
-    }
-}, 100 );
+}, 9999 );
 

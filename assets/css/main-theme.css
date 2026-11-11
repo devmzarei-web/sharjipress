@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    SHARJI PRESS - MAIN HEADER STYLES
    ========================================================================== */
 :root {
@@ -53,10 +53,11 @@
     }
 
     .sharji-wrapper {
-        max-width: 1920px;
+        max-width: var(--site-max-width, 1380px);
         margin: 0 auto;
         padding: 0 40px;
         width: 100%;
+        box-sizing: border-box;
     }
 
     /* ========== Desktop Top Bar ========== */
@@ -904,10 +905,11 @@
     .footer-content-wrapper {
         position: relative;
         z-index: 10 !important;
-        max-width: 1920px;
+        max-width: var(--site-max-width, 1380px);
         margin: 0 auto;
         padding: 0 40px;
         width: 100%;
+        box-sizing: border-box;
     }
 
     .footer-grid {

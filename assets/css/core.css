@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Sharji Press - Core Stylesheet
  * Resets, CSS Variables, Typography, Layout & Utilities
  * 100% Local - Zero External Dependencies
@@ -100,13 +100,18 @@ input, textarea, select {
     font-family: 'Vazirmatn', sans-serif !important;
 }
 
+:root {
+    --site-max-width: 1380px;
+}
+
 .site-main-wrapper {
-    max-width: 1920px !important;
+    max-width: var(--site-max-width, 1380px) !important;
     margin: 0 auto !important;
     width: 100% !important;
     padding: 0 40px !important;
     direction: rtl !important;
     background: #f8fafc;
+    box-sizing: border-box !important;
 }
 
 @media (max-width: 768px) {

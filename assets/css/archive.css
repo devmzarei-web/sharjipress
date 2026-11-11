@@ -1,9 +1,9 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    SHARJI PRESS - ARCHIVE & SEARCH RESULTS STYLES
    ========================================================================== */
 /* 1. LAYOUT CONTAINER */
     .archive-main-wrapper {
-        max-width: 1920px;
+        max-width: var(--site-max-width, 1380px);
         margin: 0 auto;
         width: 100%;
         padding: 0 40px !important;
