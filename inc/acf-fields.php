@@ -133,9 +133,14 @@ function sharji_map_frontend_submission( $post_id ) {
 }
 
 // 2. Dual Corner Promotional Popups
-add_action( 'init', 'sharji_ensure_popup_container_exists' );
+add_action( 'admin_init', 'sharji_ensure_popup_container_exists' );
 function sharji_ensure_popup_container_exists() {
-    if ( ! get_page_by_path( 'popup-settings' ) ) {
+    static $checked = false;
+    if ( $checked ) return;
+    $checked = true;
+
+    $popup_page = get_page_by_path( 'popup-settings' );
+    if ( ! $popup_page ) {
         wp_insert_post( [
             'post_title'  => 'تنظیمات پاپ‌آپ',
             'post_name'   => 'popup-settings',

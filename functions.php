@@ -8,16 +8,54 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Emergency WP Rocket Cache Purge (Visit: ?sharji_purge=123)
+if ( isset( $_GET['sharji_purge'] ) && $_GET['sharji_purge'] === '123' ) {
+    if ( function_exists( 'rocket_clean_domain' ) ) {
+        rocket_clean_domain();
+    }
+    $rocket_dir = WP_CONTENT_DIR . '/cache/wp-rocket';
+    if ( is_dir( $rocket_dir ) ) {
+        $it = new RecursiveDirectoryIterator( $rocket_dir, RecursiveDirectoryIterator::SKIP_DOTS );
+        $files = new RecursiveIteratorIterator( $it, RecursiveIteratorIterator::CHILD_FIRST );
+        foreach ( $files as $file ) {
+            if ( $file->isDir() ) {
+                @rmdir( $file->getRealPath() );
+            } else {
+                @unlink( $file->getRealPath() );
+            }
+        }
+    }
+    wp_die( '<h1>WP Rocket Cache Purged Successfully!</h1><p><a href="/">Return to Homepage</a></p>' );
+}
+
+// Temporary Diagnostic Logger
+register_shutdown_function( function() {
+    $error = error_get_last();
+    if ( $error && in_array( $error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR] ) ) {
+        @file_put_contents( __DIR__ . '/theme_debug.txt', json_encode( $error, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES ) );
+    }
+} );
+
+@ini_set( 'display_errors', '1' );
+@ini_set( 'display_startup_errors', '1' );
+@error_reporting( E_ALL );
+add_filter( 'wp_fatal_error_handler_enabled', '__return_false' );
+
 // ==========================================================================
 // 1. REQUIRE CORE MODULES
 // ==========================================================================
-require_once get_template_directory() . '/inc/helpers.php';
-require_once get_template_directory() . '/inc/enqueue.php';
-require_once get_template_directory() . '/inc/cpt.php';
-require_once get_template_directory() . '/inc/ajax.php';
-require_once get_template_directory() . '/inc/comments.php';
-require_once get_template_directory() . '/inc/user-management.php';
-require_once get_template_directory() . '/inc/acf-fields.php';
+try {
+    require_once get_template_directory() . '/inc/helpers.php';
+    require_once get_template_directory() . '/inc/enqueue.php';
+    require_once get_template_directory() . '/inc/cpt.php';
+    require_once get_template_directory() . '/inc/ajax.php';
+    require_once get_template_directory() . '/inc/comments.php';
+    require_once get_template_directory() . '/inc/user-management.php';
+    require_once get_template_directory() . '/inc/acf-fields.php';
+} catch ( \Throwable $t ) {
+    @file_put_contents( __DIR__ . '/theme_debug.txt', $t->getMessage() . ' in ' . $t->getFile() . ':' . $t->getLine() . "\n" . $t->getTraceAsString() );
+    wp_die( 'SHARJI THEME ERROR: ' . esc_html( $t->getMessage() ) . ' in ' . esc_html( $t->getFile() ) . ':' . $t->getLine() );
+}
 
 // ==========================================================================
 // 2. THEME SETUP

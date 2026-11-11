@@ -27,11 +27,13 @@ function sharji_upgrade_sardabir_role() {
     $sardabir_role = get_role( 'um_custom_role_3' );
     $wp_editor_role = get_role( 'editor' );
     if ( $sardabir_role && $wp_editor_role ) {
-        foreach ( $wp_editor_role->capabilities as $cap => $grant ) {
-            if ( $grant ) $sardabir_role->add_cap( $cap );
+        if ( ! $sardabir_role->has_cap( 'manage_categories' ) ) {
+            foreach ( $wp_editor_role->capabilities as $cap => $grant ) {
+                if ( $grant ) $sardabir_role->add_cap( $cap );
+            }
+            $sardabir_role->add_cap( 'manage_categories' );
+            $sardabir_role->add_cap( 'edit_theme_options' );
         }
-        $sardabir_role->add_cap( 'manage_categories' );
-        $sardabir_role->add_cap( 'edit_theme_options' );
     }
 }
 
@@ -135,10 +137,14 @@ function sharji_use_admin_avatar_url( $url, $id_or_email, $args ) {
     $user_id = 0;
     if ( is_numeric( $id_or_email ) ) {
         $user_id = (int) $id_or_email;
+    } elseif ( is_object( $id_or_email ) ) {
+        if ( ! empty( $id_or_email->user_id ) ) {
+            $user_id = (int) $id_or_email->user_id;
+        } elseif ( ! empty( $id_or_email->ID ) ) {
+            $user_id = (int) $id_or_email->ID;
+        }
     } elseif ( is_string( $id_or_email ) && ( $user = get_user_by( 'email', $id_or_email ) ) ) {
         $user_id = $user->ID;
-    } elseif ( is_object( $id_or_email ) && ! empty( $id_or_email->user_id ) ) {
-        $user_id = (int) $id_or_email->user_id;
     }
 
     if ( $user_id ) {
