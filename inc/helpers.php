@@ -157,15 +157,45 @@ if ( ! function_exists( 'sharji_sport_jalali_date' ) ) {
 }
 
 /**
- * Get formatted post view count
+ * Get unified raw numeric post view count (views, post_views_count, and PVC)
+ */
+if ( ! function_exists( 'sharji_get_raw_post_views' ) ) {
+    function sharji_get_raw_post_views( $post_id ) {
+        $post_id = absint( $post_id );
+        if ( ! $post_id ) {
+            return 0;
+        }
+
+        $views      = (int) get_post_meta( $post_id, 'views', true );
+        $pvc_meta   = (int) get_post_meta( $post_id, 'post_views_count', true );
+        $pvc_plugin = function_exists( 'pvc_get_post_views' ) ? (int) pvc_get_post_views( $post_id ) : 0;
+
+        $max = max( $views, $pvc_meta, $pvc_plugin );
+
+        // If metadata is out of sync, update both keys so queries sort accurately
+        if ( $max > 0 ) {
+            if ( $views !== $max ) {
+                update_post_meta( $post_id, 'views', $max );
+            }
+            if ( $pvc_meta !== $max ) {
+                update_post_meta( $post_id, 'post_views_count', $max );
+            }
+        }
+
+        return $max;
+    }
+}
+
+/**
+ * Get formatted post view count in Farsi numerals
  */
 if ( ! function_exists( 'get_post_views' ) ) {
     function get_post_views( $post_id ) {
-        $count = get_post_meta( $post_id, 'post_views_count', true );
-        if ( $count === '' ) {
+        $count = sharji_get_raw_post_views( $post_id );
+        if ( $count === 0 ) {
             return '۰';
         }
-        return sharji_to_farsi_digits( number_format_i18n( (int) $count ) );
+        return sharji_to_farsi_digits( number_format_i18n( $count ) );
     }
 }
 

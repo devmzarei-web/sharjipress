@@ -1,4 +1,4 @@
-﻿<?php get_header(); ?>
+<?php get_header(); ?>
 
 
 <?php
@@ -145,23 +145,20 @@ $bargozideh_link = $bargozideh_cat ? get_category_link($bargozideh_cat->term_id)
                 <div id="most-viewed-list" class="side-column-long border-l">
                     <?php 
                     $args_mv = [
-                        'posts_per_page' => 8,
+                        'post_type'           => 'post',
+                        'post_status'         => 'publish',
+                        'posts_per_page'      => 8,
                         'ignore_sticky_posts' => 1,
-                        'suppress_filters' => false,
-                        'orderby' => 'post_views',
-                        'order' => 'DESC'
+                        'suppress_filters'    => true,
+                        'meta_key'            => 'views',
+                        'orderby'             => 'meta_value_num',
+                        'order'               => 'DESC',
                     ];
                     $q1 = new WP_Query($args_mv);
                     if (!$q1->have_posts()) {
-                        $args_mv['suppress_filters'] = true; 
-                        $args_mv['orderby'] = 'meta_value_num';
-                        $args_mv['meta_key'] = 'views';
+                        unset($args_mv['meta_key']);
+                        $args_mv['orderby'] = 'date';
                         $q1 = new WP_Query($args_mv);
-                    }
-                    if (!$q1->have_posts()) {
-                         unset($args_mv['meta_key']);
-                         unset($args_mv['orderby']);
-                         $q1 = new WP_Query($args_mv);
                     }
                     while($q1->have_posts()): $q1->the_post(); ?>
                     <a href="<?php the_permalink(); ?>" class="n-box">
@@ -316,21 +313,19 @@ $bargozideh_link = $bargozideh_cat ? get_category_link($bargozideh_cat->term_id)
             <div id="list-most_viewed">
                 <?php
                 $args_mv_mob = [
-                    'posts_per_page' => 5,
-                    'suppress_filters' => false,
-                    'orderby' => 'post_views',
-                    'order' => 'DESC'
+                    'post_type'           => 'post',
+                    'post_status'         => 'publish',
+                    'posts_per_page'      => 5,
+                    'ignore_sticky_posts' => 1,
+                    'suppress_filters'    => true,
+                    'meta_key'            => 'views',
+                    'orderby'             => 'meta_value_num',
+                    'order'               => 'DESC',
                 ];
                 $mq3 = new WP_Query($args_mv_mob);
                 if (!$mq3->have_posts()) {
-                    $args_mv_mob['suppress_filters'] = true;
-                    $args_mv_mob['orderby'] = 'meta_value_num';
-                    $args_mv_mob['meta_key'] = 'views';
-                    $mq3 = new WP_Query($args_mv_mob);
-                }
-                if (!$mq3->have_posts()) {
                     unset($args_mv_mob['meta_key']);
-                    unset($args_mv_mob['orderby']);
+                    $args_mv_mob['orderby'] = 'date';
                     $mq3 = new WP_Query($args_mv_mob);
                 }
                 while($mq3->have_posts()): $mq3->the_post(); ?>

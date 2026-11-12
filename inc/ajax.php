@@ -8,50 +8,96 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// 1. AJAX: Increment Single Post Views
+// 1. AJAX: Increment Single Post Views (100% Unified with Post Views Counter & Meta)
 add_action( 'wp_ajax_sharji_increment_views', 'sharji_ajax_increment_views_handler' );
 add_action( 'wp_ajax_nopriv_sharji_increment_views', 'sharji_ajax_increment_views_handler' );
 function sharji_ajax_increment_views_handler() {
-    $post_id = isset( $_POST['post_id'] ) ? intval( $_POST['post_id'] ) : 0;
-    if ( $post_id ) {
-        $count = (int) get_post_meta( $post_id, 'views', true );
-        $count++;
-        update_post_meta( $post_id, 'views', $count );
-        update_post_meta( $post_id, 'post_views_count', $count );
-        wp_send_json_success( $count );
+    $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+    if ( $post_id > 0 && get_post_status( $post_id ) === 'publish' ) {
+        // Fetch current highest recorded count across all mechanisms
+        $current = function_exists( 'sharji_get_raw_post_views' ) 
+            ? sharji_get_raw_post_views( $post_id ) 
+            : (int) get_post_meta( $post_id, 'views', true );
+        
+        $new_count = $current + 1;
+
+        // Atomically update both meta keys
+        update_post_meta( $post_id, 'views', $new_count );
+        update_post_meta( $post_id, 'post_views_count', $new_count );
+
+        // If Post Views Counter plugin is active, increment its internal table as well
+        if ( function_exists( 'pvc_view_post' ) ) {
+            pvc_view_post( $post_id, 1 );
+        }
+
+        $farsi_val = function_exists( 'sharji_to_farsi_digits' ) 
+            ? sharji_to_farsi_digits( number_format_i18n( $new_count ) ) 
+            : (string) $new_count;
+
+        wp_send_json_success( [
+            'post_id' => $post_id,
+            'views'   => $new_count,
+            'farsi'   => $farsi_val,
+        ] );
     }
-    wp_send_json_error();
+    wp_send_json_error( 'Invalid post' );
 }
 
-// 2. AJAX: Bulk Views Fetcher
+// 2. AJAX: Bulk Views Fetcher (Returns live Farsi numerals)
 add_action( 'wp_ajax_sharji_get_bulk_views', 'sharji_ajax_get_bulk_views_handler' );
 add_action( 'wp_ajax_nopriv_sharji_get_bulk_views', 'sharji_ajax_get_bulk_views_handler' );
 function sharji_ajax_get_bulk_views_handler() {
-    $post_ids = isset( $_POST['post_ids'] ) ? array_map( 'intval', $_POST['post_ids'] ) : [];
+    $post_ids = isset( $_POST['post_ids'] ) ? array_map( 'absint', $_POST['post_ids'] ) : [];
     $results = [];
     if ( ! empty( $post_ids ) ) {
         foreach ( $post_ids as $id ) {
-            $count = get_post_meta( $id, 'views', true );
-            $results[$id] = empty( $count ) ? "0" : $count;
+            if ( $id > 0 ) {
+                $count = function_exists( 'sharji_get_raw_post_views' ) 
+                    ? sharji_get_raw_post_views( $id ) 
+                    : (int) get_post_meta( $id, 'views', true );
+
+                $results[$id] = function_exists( 'sharji_to_farsi_digits' ) 
+                    ? sharji_to_farsi_digits( number_format_i18n( $count ) ) 
+                    : (string) $count;
+            }
         }
         wp_send_json_success( $results );
     }
-    wp_send_json_error();
+    wp_send_json_error( 'No IDs provided' );
 }
 
-// 3. Single Post View Increment Trigger in Footer
+// 3. Single Post View Increment Trigger in Footer (Reliable with caching & keepalive)
 add_action( 'wp_footer', function() {
     if ( is_single() ) {
         $post_id = get_the_ID();
+        if ( ! $post_id ) return;
         ?>
         <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var ajaxUrl = (typeof sharjiSettings !== 'undefined' && sharjiSettings.ajaxUrl) ? sharjiSettings.ajaxUrl : '/wp-admin/admin-ajax.php';
+        (function() {
+            var postId = '<?php echo esc_js( $post_id ); ?>';
+            if (!postId) return;
+
+            // Session check prevents duplicate count spikes on accidental fast refresh
+            var storageKey = 'sharji_v_' + postId;
+            try {
+                if (sessionStorage.getItem(storageKey)) return;
+                sessionStorage.setItem(storageKey, '1');
+            } catch(e) {}
+
+            var ajaxUrl = (typeof sharjiSettings !== 'undefined' && sharjiSettings.ajaxUrl) 
+                ? sharjiSettings.ajaxUrl 
+                : '/wp-admin/admin-ajax.php';
+
             var fd = new FormData();
             fd.append('action', 'sharji_increment_views');
-            fd.append('post_id', '<?php echo esc_js( $post_id ); ?>');
-            fetch(ajaxUrl, { method: 'POST', body: fd }).catch(function(){});
-        });
+            fd.append('post_id', postId);
+
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon(ajaxUrl, fd);
+            } else {
+                fetch(ajaxUrl, { method: 'POST', body: fd, keepalive: true }).catch(function(){});
+            }
+        })();
         </script>
         <?php
     }

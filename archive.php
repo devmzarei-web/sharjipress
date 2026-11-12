@@ -1,4 +1,4 @@
-﻿<?php get_header(); ?>
+<?php get_header(); ?>
 
 
 <div class="archive-main-wrapper">
@@ -32,9 +32,10 @@
                     $args['order'] = 'ASC';
                     $args['orderby'] = 'date';
                 } elseif ($sort == 'views') {
-                    $args['meta_key'] = 'post_views_count'; 
+                    $args['meta_key'] = 'views'; 
                     $args['orderby'] = 'meta_value_num';
                     $args['order'] = 'DESC';
+                    $args['suppress_filters'] = true;
                 } else {
                     $args['order'] = 'DESC';
                     $args['orderby'] = 'date';
