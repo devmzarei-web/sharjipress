@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    DEFAULT PAGE & INDEX CARD STYLES
    ========================================================================== */
 /* تنظیمات کلی بدنه سایت */
@@ -266,6 +266,7 @@
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1359,6 +1360,7 @@ textarea.custom-input {
     text-align: justify;
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -2043,6 +2045,7 @@ textarea.custom-input {
     line-height: 1.25rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

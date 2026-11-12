@@ -169,3 +169,24 @@ if ( ! function_exists( 'get_post_views' ) ) {
     }
 }
 
+// Sport Context Helpers
+if ( ! function_exists( 'sharji_is_sport_single' ) ) {
+    function sharji_is_sport_single() {
+        if ( ! is_single() ) {
+            return false;
+        }
+        $theme_param = isset( $_GET['theme'] ) ? sanitize_key( wp_unslash( $_GET['theme'] ) ) : '';
+        return $theme_param === 'sport' || is_page_template( 'single-sport.php' );
+    }
+}
+
+if ( ! function_exists( 'sharji_is_sport_context' ) ) {
+    function sharji_is_sport_context() {
+        return is_category( 'sport' )
+            || is_page_template( 'page-league-table.php' )
+            || is_page_template( 'page-newspapers.php' )
+            || is_page_template( 'page-wlivescores.php' )
+            || sharji_is_sport_single();
+    }
+}
+

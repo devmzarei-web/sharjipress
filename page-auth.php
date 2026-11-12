@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Template Name: Sharji Auth Final V6
  */
@@ -9,10 +9,7 @@
     <meta charset="<?php bloginfo( 'charset' ); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
-    
-    /assets/css/fontawesome.min.css" />
-    
-    </head>
+</head>
 <body <?php body_class(); ?>>
 <div class="auth-container">
     

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html <?php language_attributes(); ?> dir="rtl">
 <head>
     <meta charset="<?php bloginfo( 'charset' ); ?>">
@@ -119,7 +119,7 @@ if (!function_exists('sharji_sport_jalali_date')) {
         <a href="<?php echo esc_url( home_url('/category/sport') ); ?>">
             <span class="font-sport" style="font-size: 24px; color: #fff;">شرجی <span style="color: #3b82f6;">اسپورت</span></span>
         </a>
-        <a href="https://sharjipress.ir">شرجی پرس</a
+        <a href="https://sharjipress.ir">شرجی پرس</a>
         <a href="<?php echo esc_url( home_url('/league-table') ); ?>">جدول لیگ برتر</a>
         <a href="#">جام حذفی</a>
         <a href="#">چند رسانه ای</a>

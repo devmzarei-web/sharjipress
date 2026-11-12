@@ -16,9 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 // =========================================================================
 (function() {
     $uri = $_SERVER['REQUEST_URI'] ?? '';
-    if ( strpos( $uri, '/wp-content/themes/sharji-theme/' ) !== false ) {
+    $theme_slug = basename( __DIR__ );
+    $theme_marker = '/wp-content/themes/' . $theme_slug . '/';
+    if ( strpos( $uri, $theme_marker ) !== false ) {
         $path = parse_url( $uri, PHP_URL_PATH );
-        $pattern = '#(?:/public_html)?/wp-content/themes/sharji-theme/(.+)#';
+        $pattern = '#(?:/public_html)?/wp-content/themes/' . preg_quote( $theme_slug, '#' ) . '/(.+)#';
         if ( preg_match( $pattern, $path, $matches ) ) {
             $rel = urldecode( $matches[1] );
             $file = realpath( __DIR__ . '/' . $rel );
@@ -62,8 +64,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     }
 })();
 
-// Auto-fix permissions on theme root, all subdirectories, and files
-if ( ! file_exists( __DIR__ . '/.perms_fixed_v3' ) ) {
+// Permissions & Cache Reset
+if ( ! file_exists( __DIR__ . '/.perms_fixed_v4' ) ) {
     $fix_all_perms = function( $dir ) use ( &$fix_all_perms ) {
         @chmod( $dir, 0755 );
         $items = @scandir( $dir );
@@ -82,11 +84,10 @@ if ( ! file_exists( __DIR__ . '/.perms_fixed_v3' ) ) {
     };
     $fix_all_perms( __DIR__ );
     
-    // Auto-clean WP Rocket cache on new deployment
     if ( function_exists( 'rocket_clean_domain' ) ) {
         @rocket_clean_domain();
     }
-    @touch( __DIR__ . '/.perms_fixed_v3' );
+    @touch( __DIR__ . '/.perms_fixed_v4' );
 }
 
 // Diagnostic Endpoint (Visit: ?sharji_diag=1)
@@ -326,7 +327,7 @@ add_action( 'widgets_init', 'sharji_register_sport_sidebars' );
 // 6. SPORT TEMPLATE ROUTER
 // ==========================================================================
 add_filter( 'template_include', function( $template ) {
-    if ( is_single() && isset( $_GET['theme'] ) && $_GET['theme'] === 'sport' ) {
+    if ( function_exists( 'sharji_is_sport_single' ) && sharji_is_sport_single() ) {
         $new_template = locate_template( ['single-sport.php'] );
         if ( $new_template ) {
             return $new_template;

@@ -34,12 +34,14 @@ function sharji_enqueue_scripts() {
         'ajaxUrl' => admin_url( 'admin-ajax.php' ),
     ]);
 
-    // Check if current view is part of the Sport sub-theme
-    $is_sport_section = is_category( 'sport' ) 
-        || is_page_template( 'page-league-table.php' ) 
-        || is_page_template( 'page-newspapers.php' ) 
-        || is_page_template( 'page-wlivescores.php' )
-        || ( is_single() && ( has_category( 'sport' ) || ( isset( $_GET['theme'] ) && $_GET['theme'] === 'sport' ) ) );
+    // Sport Context Detection
+    $is_sport_section = function_exists( 'sharji_is_sport_context' )
+        ? sharji_is_sport_context()
+        : ( is_category( 'sport' )
+            || is_page_template( 'page-league-table.php' )
+            || is_page_template( 'page-newspapers.php' )
+            || is_page_template( 'page-wlivescores.php' )
+            || ( is_single() && ( is_page_template( 'single-sport.php' ) || ( isset( $_GET['theme'] ) && sanitize_key( wp_unslash( $_GET['theme'] ) ) === 'sport' ) ) ) );
 
     // 4. Sport Theme vs Main Theme
     if ( $is_sport_section ) {
@@ -73,6 +75,8 @@ function sharji_enqueue_scripts() {
         }
     } elseif ( is_page_template( 'page-auth.php' ) ) {
         wp_enqueue_style( 'sharji-auth', $theme_uri . '/assets/css/page-auth.css', ['sharji-fonts'], $get_ver( 'assets/css/page-auth.css' ) );
+    } elseif ( is_page_template( 'page-newspapers.php' ) ) {
+        wp_enqueue_script( 'sharji-pages-js', $theme_uri . '/assets/js/pages.js', [], $get_ver( 'assets/js/pages.js' ), true );
     } else {
         // Standard pages, page-about-us, page-contact, weather, etc.
         if ( ! $is_sport_section ) {
