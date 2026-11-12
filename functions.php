@@ -214,6 +214,25 @@ add_action( 'after_setup_theme', 'sharji_setup' );
 // ==========================================================================
 // 3. CLEAN UNNECESSARY HEAD OUTPUT & PERFORMANCE
 // ==========================================================================
+
+// Font preloads with correct absolute URLs (fixes WP Rocket generating /public_html/ paths)
+add_action( 'wp_head', function() {
+    $uri = get_template_directory_uri();
+    $fonts = [
+        '/assets/fonts/Diba.woff2',
+        '/assets/fonts/Vazirmatn-Regular.woff2',
+        '/assets/fonts/Vazirmatn-Medium.woff2',
+        '/assets/fonts/Vazirmatn-Bold.woff2',
+    ];
+    foreach ( $fonts as $font ) {
+        $full_uri = $uri . $font;
+        $file_path = get_template_directory() . $font;
+        if ( file_exists( $file_path ) ) {
+            echo '<link rel="preload" as="font" type="font/woff2" href="' . esc_url( $full_uri ) . '" crossorigin>' . "\n";
+        }
+    }
+}, 1 );
+
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
 remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
