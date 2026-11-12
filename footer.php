@@ -1,4 +1,4 @@
-﻿<footer class="site-footer">
+<footer class="site-footer">
     
     <img 
         class="footer-bg-img-tag" 
@@ -137,11 +137,11 @@
                     </div>
                 </div>
 
-                <div class="erasaneh-trust-box">
-                    <div id="div_eRasanehTrustseal_83702"></div>
-                    <script src="https://trustseal.e-rasaneh.ir/trustseal.js"></script>
-                    <script>eRasaneh_Trustseal(83702, true);</script>
-                </div>
+                <?php
+                if ( function_exists( 'sharji_render_erasaneh_trust_box' ) ) {
+                    sharji_render_erasaneh_trust_box( 'erasaneh-trust-box' );
+                }
+                ?>
             </div>
 
         </div>

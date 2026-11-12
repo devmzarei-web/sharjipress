@@ -1,4 +1,4 @@
-﻿<footer class="sport-footer">
+<footer class="sport-footer">
 
     <div class="sport-footer-bg-icon">
         <i class="far fa-futbol"></i>
@@ -124,11 +124,11 @@
                     <p style="margin: 0;">آبادان، خیابان امیری، جنب پاساژ پارمیدا، دفتر شرجی پرس</p>
                 </div>
 
-                <div class="sport-erasaneh-trust-box">
-                    <div id="div_eRasanehTrustseal_83702"></div>
-                    <script src="https://trustseal.e-rasaneh.ir/trustseal.js"></script>
-                    <script>eRasaneh_Trustseal(83702, true);</script>
-                </div>
+                <?php
+                if ( function_exists( 'sharji_render_erasaneh_trust_box' ) ) {
+                    sharji_render_erasaneh_trust_box( 'sport-erasaneh-trust-box' );
+                }
+                ?>
             </div>
 
         </div>

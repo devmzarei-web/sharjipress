@@ -136,7 +136,7 @@ if ( isset( $_GET['sharji_purge'] ) && $_GET['sharji_purge'] === '123' ) {
     wp_die( '<h1>WP Rocket Cache Purged Successfully!</h1><p><a href="/">Return to Homepage</a></p>' );
 }
 
-// Temporary Diagnostic Logger
+// Fatal Error File Logger
 register_shutdown_function( function() {
     $error = error_get_last();
     if ( $error && in_array( $error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR] ) ) {
@@ -144,10 +144,21 @@ register_shutdown_function( function() {
     }
 } );
 
-@ini_set( 'display_errors', '1' );
-@ini_set( 'display_startup_errors', '1' );
-@error_reporting( E_ALL );
-add_filter( 'wp_fatal_error_handler_enabled', '__return_false' );
+// Output Buffer Flush Handler
+if ( filter_var( ini_get( 'zlib.output_compression' ), FILTER_VALIDATE_BOOLEAN ) || (int) ini_get( 'zlib.output_compression' ) > 0 ) {
+    remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 );
+    add_action( 'shutdown', function() {
+        while ( ob_get_level() > 0 ) {
+            $handlers = ob_list_handlers();
+            if ( empty( $handlers ) || end( $handlers ) === 'zlib output compression' ) {
+                break;
+            }
+            if ( ! @ob_end_flush() ) {
+                break;
+            }
+        }
+    }, 1 );
+}
 
 // ==========================================================================
 // 1. REQUIRE CORE MODULES

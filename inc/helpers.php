@@ -190,3 +190,63 @@ if ( ! function_exists( 'sharji_is_sport_context' ) ) {
     }
 }
 
+// Editorial Permit Helper
+if ( ! function_exists( 'sharji_render_erasaneh_trust_box' ) ) {
+    function sharji_render_erasaneh_trust_box( $box_class = 'erasaneh-trust-box', $license_id = 83702 ) {
+        $box_class   = sanitize_html_class( $box_class, 'erasaneh-trust-box' );
+        $license_id  = absint( $license_id );
+        $farsi_id    = sharji_to_farsi_digits( (string) $license_id );
+        $container   = 'div_eRasanehTrustseal_' . $license_id;
+        $fallback_id = 'sharjiPermitFallback_' . $license_id;
+        ?>
+        <div class="<?php echo esc_attr( $box_class ); ?>">
+            <div id="<?php echo esc_attr( $container ); ?>"></div>
+            <a href="https://e-rasaneh.ir/" target="_blank" rel="noopener noreferrer" class="sharji-permit-fallback" id="<?php echo esc_attr( $fallback_id ); ?>">
+                <span class="sharji-permit-icon"><i class="fas fa-shield-alt"></i></span>
+                <span class="sharji-permit-meta">
+                    <strong class="sharji-permit-title">دارای مجوز رسمی رسانه</strong>
+                    <span class="sharji-permit-sub">وزارت فرهنگ و ارشاد اسلامی | کد: <?php echo esc_html( $farsi_id ); ?></span>
+                </span>
+            </a>
+        </div>
+        <script>
+        (function () {
+            var sealEl = document.getElementById('<?php echo esc_js( $container ); ?>');
+            var fallbackEl = document.getElementById('<?php echo esc_js( $fallback_id ); ?>');
+            if (!sealEl || !fallbackEl) return;
+
+            var syncSealState = function () {
+                if (sealEl.children.length > 0 || sealEl.innerHTML.trim() !== '') {
+                    fallbackEl.style.display = 'none';
+                    return true;
+                }
+                return false;
+            };
+
+            if (typeof MutationObserver === 'function') {
+                var observer = new MutationObserver(function () {
+                    if (syncSealState()) {
+                        observer.disconnect();
+                    }
+                });
+                observer.observe(sealEl, { childList: true, subtree: true });
+            }
+
+            var script = document.createElement('script');
+            script.src = 'https://trustseal.e-rasaneh.ir/trustseal.js';
+            script.async = true;
+            script.onload = function () {
+                if (typeof window.eRasaneh_Trustseal === 'function') {
+                    try {
+                        window.eRasaneh_Trustseal(<?php echo (int) $license_id; ?>, true);
+                        setTimeout(syncSealState, 300);
+                    } catch (e) {}
+                }
+            };
+            document.body.appendChild(script);
+        })();
+        </script>
+        <?php
+    }
+}
+
