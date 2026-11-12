@@ -8,26 +8,85 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Auto-fix permissions on assets directory if needed
-if ( is_dir( __DIR__ . '/assets' ) && ! file_exists( __DIR__ . '/.perms_fixed' ) ) {
-    $fix_perms = function( $dir ) use ( &$fix_perms ) {
+// =========================================================================
+// BULLETPROOF STATIC ASSET HANDLER
+// If Apache/LiteSpeed routes static asset requests to WordPress index.php,
+// this intercepts the request and serves the file directly with HTTP 200,
+// correct MIME type, and caching headers before any 404 handler is invoked.
+// =========================================================================
+(function() {
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    if ( strpos( $uri, '/wp-content/themes/sharji-theme/' ) !== false ) {
+        $path = parse_url( $uri, PHP_URL_PATH );
+        $pattern = '#(?:/public_html)?/wp-content/themes/sharji-theme/(.+)#';
+        if ( preg_match( $pattern, $path, $matches ) ) {
+            $rel = urldecode( $matches[1] );
+            $file = realpath( __DIR__ . '/' . $rel );
+            $theme_root = realpath( __DIR__ );
+
+            if ( $file && strpos( $file, $theme_root ) === 0 && is_file( $file ) ) {
+                $ext = strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
+                $mimes = [
+                    'css'   => 'text/css; charset=utf-8',
+                    'js'    => 'application/javascript; charset=utf-8',
+                    'woff2' => 'font/woff2',
+                    'woff'  => 'font/woff',
+                    'ttf'   => 'font/ttf',
+                    'eot'   => 'application/vnd.ms-fontobject',
+                    'svg'   => 'image/svg+xml',
+                    'png'   => 'image/png',
+                    'jpg'   => 'image/jpeg',
+                    'jpeg'  => 'image/jpeg',
+                    'gif'   => 'image/gif',
+                    'webp'  => 'image/webp',
+                    'ico'   => 'image/x-icon',
+                    'json'  => 'application/json',
+                    'map'   => 'application/json',
+                ];
+
+                if ( isset( $mimes[ $ext ] ) ) {
+                    while ( ob_get_level() ) {
+                        ob_end_clean();
+                    }
+                    http_response_code( 200 );
+                    header( 'Content-Type: ' . $mimes[ $ext ] );
+                    header( 'Content-Length: ' . filesize( $file ) );
+                    header( 'Cache-Control: public, max-age=31536000, immutable' );
+                    header( 'Access-Control-Allow-Origin: *' );
+                    header( 'X-Served-By: SharjiTheme-DirectHandler' );
+                    readfile( $file );
+                    exit;
+                }
+            }
+        }
+    }
+})();
+
+// Auto-fix permissions on theme root, all subdirectories, and files
+if ( ! file_exists( __DIR__ . '/.perms_fixed_v3' ) ) {
+    $fix_all_perms = function( $dir ) use ( &$fix_all_perms ) {
         @chmod( $dir, 0755 );
         $items = @scandir( $dir );
         if ( is_array( $items ) ) {
             foreach ( $items as $item ) {
-                if ( $item === '.' || $item === '..' ) continue;
+                if ( $item === '.' || $item === '..' || $item === '.git' ) continue;
                 $path = $dir . '/' . $item;
                 if ( is_dir( $path ) ) {
                     @chmod( $path, 0755 );
-                    $fix_perms( $path );
+                    $fix_all_perms( $path );
                 } else {
                     @chmod( $path, 0644 );
                 }
             }
         }
     };
-    $fix_perms( __DIR__ . '/assets' );
-    @touch( __DIR__ . '/.perms_fixed' );
+    $fix_all_perms( __DIR__ );
+    
+    // Auto-clean WP Rocket cache on new deployment
+    if ( function_exists( 'rocket_clean_domain' ) ) {
+        @rocket_clean_domain();
+    }
+    @touch( __DIR__ . '/.perms_fixed_v3' );
 }
 
 // Diagnostic Endpoint (Visit: ?sharji_diag=1)

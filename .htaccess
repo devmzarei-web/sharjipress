@@ -1,0 +1,17 @@
+# Sharji Theme - Direct Static Assets Access
+<IfModule mod_rewrite.c>
+    RewriteEngine Off
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "\.(css|js|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico|map)$">
+        Require all granted
+    </FilesMatch>
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    <FilesMatch "\.(css|js|woff|woff2|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico|map)$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+</IfModule>
