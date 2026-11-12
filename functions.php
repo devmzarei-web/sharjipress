@@ -8,6 +8,54 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+// Auto-fix permissions on assets directory if needed
+if ( is_dir( __DIR__ . '/assets' ) && ! file_exists( __DIR__ . '/.perms_fixed' ) ) {
+    $fix_perms = function( $dir ) use ( &$fix_perms ) {
+        @chmod( $dir, 0755 );
+        $items = @scandir( $dir );
+        if ( is_array( $items ) ) {
+            foreach ( $items as $item ) {
+                if ( $item === '.' || $item === '..' ) continue;
+                $path = $dir . '/' . $item;
+                if ( is_dir( $path ) ) {
+                    @chmod( $path, 0755 );
+                    $fix_perms( $path );
+                } else {
+                    @chmod( $path, 0644 );
+                }
+            }
+        }
+    };
+    $fix_perms( __DIR__ . '/assets' );
+    @touch( __DIR__ . '/.perms_fixed' );
+}
+
+// Diagnostic Endpoint (Visit: ?sharji_diag=1)
+if ( isset( $_GET['sharji_diag'] ) ) {
+    header( 'Content-Type: text/plain; charset=utf-8' );
+    echo "=== SHARJI THEME DIAGNOSTIC ===\n";
+    echo "Theme Dir: " . get_template_directory() . "\n";
+    echo "Theme URI: " . get_template_directory_uri() . "\n";
+    echo "Doc Root: " . ( $_SERVER['DOCUMENT_ROOT'] ?? 'unknown' ) . "\n";
+    
+    $check_assets = [
+        'style.css',
+        'assets/css/fonts.css',
+        'assets/css/core.css',
+        'assets/css/main-theme.css',
+        'assets/js/navigation.js',
+        'assets/fonts/Diba.woff2',
+    ];
+    foreach ( $check_assets as $rel ) {
+        $full = get_template_directory() . '/' . $rel;
+        $exists = file_exists( $full ) ? 'YES' : 'NO';
+        $perms = file_exists( $full ) ? substr( sprintf( '%o', fileperms( $full ) ), -4 ) : 'NONE';
+        $size = file_exists( $full ) ? filesize( $full ) . ' bytes' : '0 bytes';
+        echo "$rel: exists=$exists, perms=$perms, size=$size\n";
+    }
+    exit;
+}
+
 // Emergency WP Rocket Cache Purge (Visit: ?sharji_purge=123)
 if ( isset( $_GET['sharji_purge'] ) && $_GET['sharji_purge'] === '123' ) {
     if ( function_exists( 'rocket_clean_domain' ) ) {
