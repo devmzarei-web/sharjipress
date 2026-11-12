@@ -3,10 +3,10 @@
    ========================================================================== */
 /* تنظیمات کلی بدنه سایت */
 .site-main-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
     width: 100% !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background: #f8fafc;
     box-sizing: border-box !important;
@@ -345,10 +345,10 @@
 
 /* --- لی‌اوت اصلی --- */
 .site-main-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
     width: 100% !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background: #f8fafc;
     box-sizing: border-box !important;
@@ -838,9 +838,9 @@
 }
 
 .site-main-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background:
         radial-gradient(circle at top right, rgba(0, 86, 179, 0.08), transparent 32%),
@@ -1718,10 +1718,10 @@ textarea.custom-input {
    PRAYER TIMES PAGE STYLES
    ========================================================================== */
 .prayer-page-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
     width: 100% !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background: #f8fafc;
     box-sizing: border-box !important;
@@ -2128,10 +2128,10 @@ textarea.custom-input {
 
 /* تنظیمات لی‌اوت اصلی */
 .site-main-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
     width: 100% !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background: #f8fafc;
     box-sizing: border-box !important;
@@ -2537,9 +2537,9 @@ textarea.custom-input {
    USER PROFILE PAGE STYLES
    ========================================================================== */
 .user-main-wrapper {
-    max-width: var(--site-max-width, 1380px);
+    max-width: var(--site-max-width, 1488px);
     margin: 0 auto;
-    padding: 40px !important;
+    padding: 40px var(--site-gutter, 24px) !important;
     direction: rtl;
     box-sizing: border-box;
     background-color: #f8fafc;
@@ -3003,7 +3003,7 @@ textarea.custom-input {
     border: 1px solid rgba(226, 232, 240, 0.95);
     padding: 50px 60px;
     box-shadow: 0 24px 65px rgba(15, 23, 42, 0.08);
-    max-width: 1400px;
+    max-width: var(--site-max-width, 1488px);
     margin: 0 auto;
     backdrop-filter: blur(10px);
 }
@@ -3528,9 +3528,11 @@ textarea.custom-input {
 }
 
 .weather-page-wrapper {
-    max-width: 1400px;
+    max-width: var(--site-max-width, 1488px);
+    width: 100%;
     margin: 40px auto;
-    padding: 0 40px;
+    padding: 0 var(--site-gutter, 24px);
+    box-sizing: border-box;
     display: flex;
     gap: 40px;
     align-items: flex-start;

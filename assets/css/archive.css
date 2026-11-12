@@ -3,10 +3,10 @@
    ========================================================================== */
 /* 1. LAYOUT CONTAINER */
     .archive-main-wrapper {
-        max-width: var(--site-max-width, 1380px);
+        max-width: var(--site-max-width, 1488px);
         margin: 0 auto;
         width: 100%;
-        padding: 0 40px !important;
+        padding: 0 var(--site-gutter, 24px) !important;
         direction: rtl;
         box-sizing: border-box;
     }

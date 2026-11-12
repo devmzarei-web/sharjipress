@@ -101,14 +101,15 @@ input, textarea, select {
 }
 
 :root {
-    --site-max-width: 1380px;
+    --site-max-width: 1488px;
+    --site-gutter: 24px;
 }
 
 .site-main-wrapper {
-    max-width: var(--site-max-width, 1380px) !important;
+    max-width: var(--site-max-width, 1488px) !important;
     margin: 0 auto !important;
     width: 100% !important;
-    padding: 0 40px !important;
+    padding: 0 var(--site-gutter, 24px) !important;
     direction: rtl !important;
     background: #f8fafc;
     box-sizing: border-box !important;

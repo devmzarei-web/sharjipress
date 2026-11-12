@@ -29,10 +29,10 @@
     }
 
     .single-main-wrapper {
-        max-width: var(--site-max-width, 1380px) !important;
+        max-width: var(--site-max-width, 1488px) !important;
         margin: 0 auto !important;
         width: 100% !important;
-        padding: 0 40px !important;
+        padding: 0 var(--site-gutter, 24px) !important;
         direction: rtl !important;
         background: transparent;
         font-family: 'Vazirmatn', sans-serif !important;
