@@ -250,3 +250,24 @@ if ( ! function_exists( 'sharji_render_erasaneh_trust_box' ) ) {
     }
 }
 
+// Author Visibility Helpers
+if ( ! function_exists( 'sharji_can_manage_author_visibility' ) ) {
+    function sharji_can_manage_author_visibility() {
+        if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) ) {
+            return false;
+        }
+        $user = wp_get_current_user();
+        return in_array( 'administrator', (array) $user->roles, true );
+    }
+}
+
+if ( ! function_exists( 'sharji_should_show_post_author' ) ) {
+    function sharji_should_show_post_author( $post_id = 0 ) {
+        $post_id = $post_id ? absint( $post_id ) : get_the_ID();
+        if ( ! $post_id ) {
+            return false;
+        }
+        return get_post_meta( $post_id, '_sharji_show_author', true ) === '1';
+    }
+}
+

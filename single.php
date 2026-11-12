@@ -1,4 +1,4 @@
-﻿<?php get_header(); ?>
+<?php get_header(); ?>
 
 
 
@@ -33,10 +33,15 @@
                             ),
                         'datePublished' => get_the_date('c'),
                         'dateModified' => get_the_modified_date('c'),
-                        'author' => [
-                            '@type' => 'Person',
-                            'name' => get_the_author(),
-                        ],
+                        'author' => ( function_exists( 'sharji_should_show_post_author' ) && sharji_should_show_post_author( get_the_ID() ) )
+                            ? [
+                                '@type' => 'Person',
+                                'name'  => get_the_author(),
+                            ]
+                            : [
+                                '@type' => 'Organization',
+                                'name'  => get_bloginfo('name'),
+                            ],
                         'publisher' => [
                             '@type' => 'Organization',
                             'name' => get_bloginfo('name'),
@@ -150,6 +155,7 @@
                                 <?php endif; ?>
 
                                 <!-- Author Profile Box -->
+                                <?php if ( function_exists( 'sharji_should_show_post_author' ) && sharji_should_show_post_author( $current_post_id ) ) : ?>
 <div class="sharji-author-box">
     <div class="author-avatar">
         <?php 
@@ -180,6 +186,7 @@
         <?php endif; ?>
     </div>
 </div>
+                                <?php endif; ?>
                                 <!-- End Author Profile Box -->
 
                                 <?php

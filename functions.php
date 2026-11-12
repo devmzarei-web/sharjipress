@@ -366,3 +366,66 @@ function render_custom_excerpt_box( $post ) {
     </div>
     <?php
 }
+
+// ==========================================================================
+// 8. ADMIN-ONLY AUTHOR VISIBILITY META BOX
+// ==========================================================================
+function sharji_register_author_visibility_meta_box() {
+    if ( ! function_exists( 'sharji_can_manage_author_visibility' ) || ! sharji_can_manage_author_visibility() ) {
+        return;
+    }
+    add_meta_box(
+        'sharji_author_visibility_box',
+        'نمایش اطلاعات نویسنده',
+        'sharji_render_author_visibility_meta_box',
+        'post',
+        'side',
+        'high'
+    );
+}
+add_action( 'add_meta_boxes', 'sharji_register_author_visibility_meta_box' );
+
+function sharji_render_author_visibility_meta_box( $post ) {
+    if ( ! function_exists( 'sharji_can_manage_author_visibility' ) || ! sharji_can_manage_author_visibility() ) {
+        return;
+    }
+    $current = get_post_meta( $post->ID, '_sharji_show_author', true ) === '1' ? '1' : '0';
+    wp_nonce_field( 'sharji_author_visibility_save', 'sharji_author_visibility_nonce' );
+    ?>
+    <div style="direction: rtl; text-align: right; line-height: 1.9;">
+        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+            <input type="radio" name="sharji_show_author" value="0" <?php checked( $current, '0' ); ?>>
+            مخفی (پیش‌فرض)
+        </label>
+        <label style="display: block; cursor: pointer;">
+            <input type="radio" name="sharji_show_author" value="1" <?php checked( $current, '1' ); ?>>
+            نمایش نام و تصویر نویسنده
+        </label>
+    </div>
+    <?php
+}
+
+function sharji_save_author_visibility_meta_box( $post_id ) {
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+        return;
+    }
+    if ( wp_is_post_revision( $post_id ) ) {
+        return;
+    }
+    if ( ! function_exists( 'sharji_can_manage_author_visibility' ) || ! sharji_can_manage_author_visibility() ) {
+        return;
+    }
+    if ( ! current_user_can( 'edit_post', $post_id ) ) {
+        return;
+    }
+    if ( ! isset( $_POST['sharji_author_visibility_nonce'] ) ) {
+        return;
+    }
+    $nonce = sanitize_text_field( wp_unslash( $_POST['sharji_author_visibility_nonce'] ) );
+    if ( ! wp_verify_nonce( $nonce, 'sharji_author_visibility_save' ) ) {
+        return;
+    }
+    $value = ( isset( $_POST['sharji_show_author'] ) && wp_unslash( $_POST['sharji_show_author'] ) === '1' ) ? '1' : '0';
+    update_post_meta( $post_id, '_sharji_show_author', $value );
+}
+add_action( 'save_post_post', 'sharji_save_author_visibility_meta_box' );
