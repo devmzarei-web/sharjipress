@@ -113,6 +113,28 @@ if ( isset( $_GET['sharji_diag'] ) ) {
         $size = file_exists( $full ) ? filesize( $full ) . ' bytes' : '0 bytes';
         echo "$rel: exists=$exists, perms=$perms, size=$size\n";
     }
+
+    echo "\n=== VIEW COUNTER DIAGNOSTIC ===\n";
+    echo "pvc_get_post_views exists: " . ( function_exists( 'pvc_get_post_views' ) ? 'YES' : 'NO' ) . "\n";
+    echo "pvc_view_post exists: " . ( function_exists( 'pvc_view_post' ) ? 'YES' : 'NO' ) . "\n";
+
+    // Test sample posts from homepage
+    $test_ids = [1111, 615, 377, 1015, 668, 714, 585, 1011];
+    foreach ( $test_ids as $pid ) {
+        $meta_views = get_post_meta( $pid, 'views', true );
+        $meta_pvc   = get_post_meta( $pid, 'post_views_count', true );
+        $pvc_func   = function_exists( 'pvc_get_post_views' ) ? pvc_get_post_views( $pid ) : 'N/A';
+        $title      = get_the_title( $pid );
+        echo "Post $pid ($title):\n";
+        echo "  - meta 'views': " . var_export( $meta_views, true ) . "\n";
+        echo "  - meta 'post_views_count': " . var_export( $meta_pvc, true ) . "\n";
+        echo "  - pvc_get_post_views(): " . var_export( $pvc_func, true ) . "\n";
+    }
+
+    // Check how PVC is configured if class exists
+    if ( class_exists( 'Post_Views_Counter' ) ) {
+        echo "PVC Options: " . json_encode( get_option( 'post_views_counter_settings_general', [] ) ) . "\n";
+    }
     exit;
 }
 
